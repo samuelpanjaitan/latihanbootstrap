@@ -1,0 +1,66 @@
+<?php 
+include 'config.php';
+?>
+  
+<form action="data.php" method="get">
+	<label>Cari :</label>
+	<input type="text" name="cari">
+	<input type="submit" value="Cari">
+</form>
+ 
+<?php 
+if(isset($_GET['cari'])){
+	$cari = $_GET['cari'];
+	echo "<b>Hasil pencarian : ".$cari."</b>";
+}
+?>
+ 
+<table border="1">
+	<tr>
+		<th>No</th>
+		<th>Nama</th>
+		<th>NIM</th>
+		<th>Penguji</th>
+		<th>Judul</th>
+		<th>Platform</th>
+		<th>Genre</th>
+		<th>Teknologi</th>
+		<th>AR/VR</th>
+	</tr>
+	<?php 
+	if(isset($_GET['cari'])){
+		$cari = $_GET['cari'];
+		$data = mysql_query("SELECT * FROM mahasiswa 
+		INNER JOIN penguji
+			ON penguji.id = mahasiswa.nim
+		INNER JOIN proyekakhir
+			ON proyekakhir.id = mahasiswa.nim where nama like '%".$cari."%' 
+				or nim like '%".$cari."%'
+				or namas like '%".$cari."%'
+				or judul like '%".$cari."%'
+				or platform like '%".$cari."%'
+				or genre like '%".$cari."%'
+				or teknologi like '%".$cari."%'");				
+	}	else {
+		$data = mysql_query("SELECT * FROM mahasiswa 
+	INNER JOIN penguji
+		ON penguji.id = mahasiswa.nim
+	INNER JOIN proyekakhir
+		ON proyekakhir.id = mahasiswa.nim");		
+	}
+	$no = 1;
+	while($d = mysql_fetch_array($data)){
+	?>
+	<tr>
+		<td><?php echo $no++; ?></td>
+		<td><?php echo $d['nama']; ?></td>		
+		<td><?php echo $d['nim']; ?></td>		
+		<td><?php echo $d['namas']; ?></td>		
+		<td><?php echo $d['judul']; ?></td>
+		<td><?php echo $d['platform']; ?></td>
+		<td><?php echo $d['genre']; ?></td>
+		<td><?php echo $d['teknologi']; ?></td>
+		<td><?php echo $d['ARVR']; ?></td>
+	</tr>
+	<?php } ?>
+</table>
